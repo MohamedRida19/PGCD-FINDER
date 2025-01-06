@@ -36,19 +36,15 @@ To run the project locally:
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/PGCD=FINDER/your-repo.git
+   git clone https://github.com/PGCD-FINDER/your-repo.git
    ```  
 2. Navigate to the project directory:  
    ```bash
    cd your-repo
    ```  
-3. Install the required dependencies:  
-   ```bash
-   pip install -r requirements.txt
-   ```  
 4. Run the project:  
    ```bash
-   python main.py
+   python PGCD-FINDER.py
    ```  
 
 ---
