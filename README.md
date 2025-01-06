@@ -13,10 +13,16 @@ This project is designed to simplify polynomial operations, such as GCD calculat
 ---
 
 ## 🛠 Features (Planned & Current)
-- [x] input directly your polynomes in the inputs section  
-- [x] get your result directly in the screen  
-- [ ] keyboard will simplify the writting of the complexe expressions *(in progress)*  
-- [ ] an apk app for phones *(coming soon)*  
+- [x] Directly input your polynomials in the provided input section.  
+- [x] View your results immediately on the screen.
+- [ ] Simplified keyboard for writing complex expressions *(in progress)*  
+- [ ] Mobile application (APK) for phones *(coming soon)*  
+
+---
+
+## 🌐 Icons and File Paths
+- The icons used in this project are from Flaticon.
+- Please replace the file paths in the code based on your local disk paths.
 
 ---
 
@@ -42,7 +48,7 @@ To run the project locally:
    ```bash
    cd your-repo
    ```  
-4. Run the project:  
+3. Run the project:  
    ```bash
    python PGCD FINDER.py
    ```  
@@ -51,7 +57,7 @@ To run the project locally:
 
 ## 🤝 Contributions
 Contributions, issues, and feature requests are welcome!  
-Feel free to check out the [issues page](#) for things to work on.  
+Feel free to check out the [issues page](https://github.com/MohamedRida19/PGCD-FINDER/issues) for things to work on. 
 
 ---
 
