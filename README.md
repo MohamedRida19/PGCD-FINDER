@@ -44,7 +44,7 @@ To run the project locally:
    ```  
 4. Run the project:  
    ```bash
-   python PGCD-FINDER.py
+   python PGCD FINDER.py
    ```  
 
 ---
