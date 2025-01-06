@@ -15,8 +15,8 @@ This project is designed to simplify polynomial operations, such as GCD calculat
 ## 🛠 Features (Planned & Current)
 - [x] input directly your polynomes in the inputs section  
 - [x] get your result directly in the screen  
-- [ ] an apk app for phones *(in progress)*  
-- [ ] keyboard will simplify the writting of the complexe expressions *(coming soon)*  
+- [ ] keyboard will simplify the writting of the complexe expressions *(in progress)*  
+- [ ] an apk app for phones *(coming soon)*  
 
 ---
 
