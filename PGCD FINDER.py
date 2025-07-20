@@ -3,28 +3,28 @@ import customtkinter as ctk
 from PIL import Image
 import re
 
-clear_icon_noir = Image.open(r'C:\\Users\\MSI\\Downloads\\retirer.png')
-clear_icon_blanc = Image.open(r'C:\\Users\\MSI\\Downloads\\retirer(1).png')
+clear_icon_noir = Image.open(r'res\\retirer.png')
+clear_icon_blanc = Image.open(r'res\\retirer(1).png')
 clear_icon_tk = ctk.CTkImage(light_image=clear_icon_noir, dark_image=clear_icon_blanc, size = (20,20))
 
-delete_icon_noir = Image.open(r'C:\\Users\\MSI\\Downloads\\clear.png')
-delete_icon_blanc = Image.open(r'C:\\Users\\MSI\\Downloads\\clear(1).png')
+delete_icon_noir = Image.open(r'res\\clear.png')
+delete_icon_blanc = Image.open(r'res\\clear(1).png')
 delete_icon_tk = ctk.CTkImage(light_image=delete_icon_noir, dark_image=delete_icon_blanc, size = (40, 40))
 
-exposant_icon_blanc = Image.open(r"C:\\Users\\MSI\\Downloads\\exposant_n(2).png")
-exposant_icon_noir = Image.open(r"C:\\Users\\MSI\\Downloads\\exposant_n(3).png")
+exposant_icon_blanc = Image.open(r"res\\exposant_n(2).png")
+exposant_icon_noir = Image.open(r"res\\exposant_n(3).png")
 exposant_icon_tk = ctk.CTkImage(light_image= exposant_icon_noir, dark_image= exposant_icon_blanc, size= (30, 30))
 
-guid_icon = Image.open(r'C:\\Users\\MSI\\Downloads\\user-guide.png')
+guid_icon = Image.open(r'res\\user-guide.png')
 guid_icon_tk = ctk.CTkImage(light_image= guid_icon, dark_image=guid_icon, size = (70, 70))
 
 root = ctk.CTk()
 
 frame_top = ctk.CTkFrame(root)
 
-math_img = Image.open(r"C:\\Users\\MSI\\Downloads\\math-book.png")
+math_img = Image.open(r"res\\math-book.png")
 math_img_tk = ctk.CTkImage(light_image=math_img, dark_image=math_img, size = (50, 50))
-calc_img = Image.open(r"C:\\Users\\MSI\\Downloads\\calculating.png")
+calc_img = Image.open(r"res\\calculating.png")
 calc_img_tk = ctk.CTkImage(light_image= calc_img, dark_image= calc_img, size = (50, 50))
 
 math_label_icon = ctk.CTkLabel(frame_top, image=math_img_tk, compound="top", text = "")
@@ -75,8 +75,11 @@ def formatted_entry(prefix, str_var, entry, event=None):
         replace_with = f"{prefix} =" + user_input
         entry.insert(0, replace_with)
     # Ajuster le curseur
+
+    
     if event:
         entry.icursor(event.widget.index(ctk.INSERT) + 1)
+
 
 def pgcd_finder():
     #Extraire les polynômes des entrées
@@ -90,20 +93,19 @@ def pgcd_finder():
     for exposant in exposants:
         if exposant in polynome_1 :
             polynome_1 = polynome_1.replace(exposant, f"**{exposants.index(exposant)}")
-        elif exposant in polynome_2:
+        if exposant in polynome_2:
             polynome_2 = polynome_2.replace(exposant, f"**{exposants.index(exposant)}")
 
     X, n = sp.symbols('X n')
-    
     #Convertire l'objet str on objet Poly pour evaluee les calculs
-    A = sp.Poly(polynome_1)
-    B = sp.Poly(polynome_2)
+    A = sp.Poly(polynome_1, X)
+    B = sp.Poly(polynome_2, X)
     
     # Calculer le PGCD
-    pgcd = sp.gcd(A, B)
+    pgcd = A.gcd(B)
     
     # Calculer le quotient et le reste
-    Q, R = sp.div(A, B)
+    Q, R = A.div(B)
     
     # Mettre à jour les étiquettes avec les résultats
     Q_label.configure(text=f"Quotient: {Q.as_expr()}")
@@ -181,6 +183,27 @@ def keyboard_show_hide():
         frame_keyboard.pack_forget()
         keyboard_state = False
 
+def clear_function():
+    entry_polynome_1.focus_set()    
+    polynome_1_str_var.set(polynome_1_str_var.get().replace(polynome_1_str_var.get(), 'A(X) ='))
+    polynome_2_str_var.set(polynome_2_str_var.get().replace(polynome_2_str_var.get(), 'B(X) ='))
+    entry_polynome_1.icursor('end')
+
+def get_focus(event= None):
+    global current_focus
+    current_focus = 'entry 1'
+
+def get_focus_2(event = None):
+    global current_focus
+    current_focus = 'entry 2'
+
+def keyboard_touche(btn):
+    global current_focus
+    if current_focus == 'entry 1':
+        entry_polynome_1.insert(entry_polynome_1.index('insert'), btn.cget('text'))
+    elif current_focus ==  'entry 2':
+        entry_polynome_2.insert(entry_polynome_2.index('insert'), btn.cget('text'))
+
 
 div_img = Image.open(r"C:\\Users\\MSI\\Downloads\\diviser.png")
 div_img_tk = ctk.CTkImage(light_image=div_img, dark_image=div_img, size = (30, 30))
@@ -195,12 +218,14 @@ polynome_1_str_var = ctk.StringVar(value='A(X) =')
 entry_polynome_1 = ctk.CTkEntry(frame_parent, width=200, height=40, textvariable=polynome_1_str_var, font=("Arial", 20), text_color=("#0303BD", '#30AEE5'))
 entry_polynome_1.grid(row=0, column=0, pady=10)
 entry_polynome_1.bind("<KeyRelease>", lambda x: formatted_entry('A(X)', polynome_1_str_var, entry_polynome_1))
+entry_polynome_1.bind("<FocusIn>", get_focus)
 
 
 polynome_2_str_var = ctk.StringVar(value='B(X) =')
 entry_polynome_2 = ctk.CTkEntry(frame_parent, width=200, height=40, textvariable=polynome_2_str_var, font=("Arial", 20), text_color = ("#0303BD", '#30AEE5'))
 entry_polynome_2.grid(row=0, column=2, pady=10)
 entry_polynome_2.bind("<KeyRelease>", lambda x: formatted_entry('B(X)', polynome_2_str_var, entry_polynome_2))
+entry_polynome_2.bind("<FocusIn>", get_focus_2)
 
 
 pgcd_button = ctk.CTkButton(frame_parent, text='', font=("Arial", 25), image=div_img_tk, command=pgcd_finder, compound='top', fg_color='transparent')
@@ -210,7 +235,7 @@ frame_parent.pack(fill='x', padx=10, pady=10)
 
 frame_result = ctk.CTkFrame(root)
 
-result_label = ctk.CTkLabel(frame_result, text="Resultat", font=("Arial", 50), text_color=("#C31307","#EF8729"))
+result_label = ctk.CTkLabel(frame_result, text="Result", font=("Arial", 50), text_color=("#C31307","#EF8729"))
 Q_label = ctk.CTkLabel(frame_result, text='Quotient: ', font=("Arial", 30), text_color=("#248F0A","#5AF63F"))
 R_label = ctk.CTkLabel(frame_result, text='Rest: ', font=("Arial", 30), text_color= ("#248F0A", "#5AF63F"))
 PGCD_label = ctk.CTkLabel(frame_result, text="PGCD: ", font=("Arial", 30), text_color= ("#248F0A", "#5AF63F"))
@@ -220,43 +245,43 @@ for i in range(5):
     frame_keyboard.columnconfigure(i, weight=1)
 
 
-btn_9 = ctk.CTkButton(frame_keyboard, text = '9', font = ("Arial", 15))
+btn_9 = ctk.CTkButton(frame_keyboard, text = '9', font = ("Arial", 15), command= lambda: keyboard_touche(btn_9))
 
-btn_8 = ctk.CTkButton(frame_keyboard, text = '8', font = ("Arial", 15))
+btn_8 = ctk.CTkButton(frame_keyboard, text = '8', font = ("Arial", 15), command= lambda: keyboard_touche(btn_8))
 
-btn_7 = ctk.CTkButton(frame_keyboard, text = '7', font = ("Arial", 15))
+btn_7 = ctk.CTkButton(frame_keyboard, text = '7', font = ("Arial", 15), command= lambda: keyboard_touche(btn_7))
 
-btn_6 = ctk.CTkButton(frame_keyboard, text = '6', font = ("Arial", 15))
+btn_6 = ctk.CTkButton(frame_keyboard, text = '6', font = ("Arial", 15), command= lambda: keyboard_touche(btn_6))
 
-btn_5 = ctk.CTkButton(frame_keyboard, text = '5', font = ("Arial", 15))
+btn_5 = ctk.CTkButton(frame_keyboard, text = '5', font = ("Arial", 15), command= lambda: keyboard_touche(btn_5))
 
-btn_4 = ctk.CTkButton(frame_keyboard, text = '4', font = ("Arial", 15))
+btn_4 = ctk.CTkButton(frame_keyboard, text = '4', font = ("Arial", 15), command= lambda: keyboard_touche(btn_4))
 
-btn_3 = ctk.CTkButton(frame_keyboard, text = '3', font = ("Arial", 15))
+btn_3 = ctk.CTkButton(frame_keyboard, text = '3', font = ("Arial", 15), command= lambda: keyboard_touche(btn_3))
 
-btn_2 = ctk.CTkButton(frame_keyboard, text = '2', font = ("Arial", 15))
+btn_2 = ctk.CTkButton(frame_keyboard, text = '2', font = ("Arial", 15), command= lambda: keyboard_touche(btn_2))
 
-btn_1 = ctk.CTkButton(frame_keyboard, text = '1', font = ("Arial", 15))
+btn_1 = ctk.CTkButton(frame_keyboard, text = '1', font = ("Arial", 15), command= lambda: keyboard_touche(btn_1))
 
 btn_exposant = ctk.CTkButton(frame_keyboard, text = '', image = exposant_icon_tk, compound= 'top', fg_color='#313131')
 
-btn_point = ctk.CTkButton(frame_keyboard, text = '.', font = ("Arial", 15))
+btn_point = ctk.CTkButton(frame_keyboard, text = '.', font = ("Arial", 15), command= lambda: keyboard_touche(btn_point))
 
-btn_0 = ctk.CTkButton(frame_keyboard, text = '0', font = ("Arial", 15))
+btn_0 = ctk.CTkButton(frame_keyboard, text = '0', font = ("Arial", 15), command= lambda: keyboard_touche(btn_0))
 
-btn_plus = ctk.CTkButton(frame_keyboard, text = '+', font = ("Arial", 15), fg_color='#313131')
+btn_plus = ctk.CTkButton(frame_keyboard, text = '+', font = ("Arial", 15), fg_color='#313131', command= lambda: keyboard_touche(btn_plus))
 
-btn_sustraction = ctk.CTkButton(frame_keyboard, text = '-', font = ("Arial", 15), fg_color='#313131')
+btn_sustraction = ctk.CTkButton(frame_keyboard, text = '-', font = ("Arial", 15), fg_color='#313131', command= lambda: keyboard_touche(btn_sustraction))
 
-btn_mult = ctk.CTkButton(frame_keyboard, text = '*', font = ("Arial", 15), fg_color='#313131')
+btn_mult = ctk.CTkButton(frame_keyboard, text = '*', font = ("Arial", 15), fg_color='#313131', command= lambda: keyboard_touche(btn_mult))
 
 btn_division = ctk.CTkButton(frame_keyboard, text = '/', font = ("Arial", 15), fg_color='#313131')
 
 btn_delete = ctk.CTkButton(frame_keyboard, text = '', fg_color='#313131', image = delete_icon_tk, compound='top')
 
-btn_clear = ctk.CTkButton(frame_keyboard, text = 'CLS', fg_color='#313131', font = ("Arial", 40, 'bold'))
+btn_clear = ctk.CTkButton(frame_keyboard, text = 'CLS', fg_color='#313131', font = ("Arial", 40, 'bold'), command = clear_function)
 
-
+current_focus = None
 frame_bottom = ctk.CTkFrame(root)
 frame_bottom.columnconfigure(0, weight=1)
 frame_bottom.columnconfigure(1, weight=1)
